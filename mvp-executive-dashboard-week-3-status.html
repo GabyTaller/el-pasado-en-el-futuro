@@ -1,0 +1,566 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MVP Executive Dashboard — Digital Content Experiment</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:#f0f2f5;color:#1f2328;font-size:13px;line-height:1.5}
+.page{max-width:1060px;margin:0 auto;padding:20px}
+
+/* Banner */
+.sample-banner{background:#fef3c7;border:1px solid #fcd34d;color:#78350f;font-size:11px;font-weight:600;padding:7px 16px;border-radius:6px;text-align:center;margin-bottom:14px;letter-spacing:.02em}
+
+/* Header */
+.hdr{background:#1e2330;color:#fff;border-radius:10px;padding:18px 24px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.hdr-left h1{font-size:18px;font-weight:700;margin-bottom:2px}
+.hdr-left .sub{font-size:12px;color:#94a3b8}
+.hdr-right{display:flex;gap:10px;align-items:center}
+.badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.04em}
+.badge-blue{background:#3b82f6;color:#fff}
+.badge-green{background:#22c55e;color:#fff}
+.badge-amber{background:#f59e0b;color:#fff}
+
+/* Sections */
+.sec-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin:18px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+
+/* Grid layouts */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g2-wide{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+.g3-mixed{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.span2{grid-column:span 2}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px}
+.card-ttl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin-bottom:10px}
+
+/* KPI cards */
+.kpi-card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;text-align:center}
+.kpi-label{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.kpi-val{font-size:28px;font-weight:800;line-height:1;margin-bottom:3px}
+.kpi-sub{font-size:10px;font-weight:600}
+.kv-green{color:#16a34a}
+.kv-blue{color:#2563eb}
+.kv-amber{color:#d97706}
+.kv-red{color:#dc2626}
+.kv-purple{color:#7c3aed}
+.sub-green{color:#16a34a}
+.sub-amber{color:#d97706}
+.sub-red{color:#dc2626}
+
+/* RAG dot */
+.rag{display:inline-block;width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.g{background:#16a34a}.a{background:#d97706}.r{background:#dc2626}
+
+/* Status rows */
+.srow{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.srow:last-child{border-bottom:none}
+.srow-label{flex:1;font-weight:500}
+.srow-note{font-size:11px;color:#64748b}
+
+/* Progress bars */
+.pb-wrap{margin:5px 0}
+.pb-labels{display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:3px}
+.pb{height:9px;background:#e2e8f0;border-radius:5px;overflow:hidden}
+.pb-fill{height:100%;border-radius:5px}
+.pb-blue{background:#3b82f6}
+.pb-green{background:#22c55e}
+.pb-amber{background:#f59e0b}
+.pb-red{background:#ef4444}
+.pb-purple{background:#8b5cf6}
+
+/* Donut */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* Milestone */
+.ms-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.ms-row:last-child{margin-bottom:0}
+.ms-spine{display:flex;flex-direction:column;align-items:center;padding-top:2px}
+.ms-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.ms-done{background:#22c55e}
+.ms-active{background:#3b82f6;box-shadow:0 0 0 3px #bfdbfe}
+.ms-pending{background:#e2e8f0}
+.ms-line{width:2px;background:#e2e8f0;flex:1;min-height:12px;margin:2px 0}
+.ms-body{flex:1}
+.ms-title{font-size:12px;font-weight:600}
+.ms-sub{font-size:10px;color:#64748b;margin-top:1px}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:5px}
+.tag-done{background:#dcfce7;color:#15803d}
+.tag-active{background:#dbeafe;color:#1d4ed8}
+.tag-risk{background:#fef9c3;color:#92400e}
+.tag-pending{background:#f1f5f9;color:#64748b}
+
+/* Funnel */
+.funnel-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.funnel-row:last-child{margin-bottom:0}
+.fl{width:130px;font-size:10px;color:#64748b;text-align:right;flex-shrink:0;font-weight:500}
+.fb-wrap{flex:1}
+.fb{height:22px;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:700;color:#fff}
+.fn{font-size:11px;font-weight:700;width:52px;text-align:right;flex-shrink:0}
+
+/* Content perf */
+.cp-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f1f5f9}
+.cp-row:last-child{border-bottom:none}
+.cp-name{font-size:11px;font-weight:500;width:140px;flex-shrink:0}
+.cp-fmt{font-size:10px;color:#64748b;width:95px;flex-shrink:0}
+.cp-bar{flex:1}
+.cp-pct{font-size:12px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+
+/* Hypothesis table */
+.htbl{width:100%;border-collapse:collapse;font-size:11px}
+.htbl th{text-align:left;font-weight:700;color:#64748b;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+.htbl td{padding:7px 8px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.htbl tr:last-child td{border-bottom:none}
+.htbl tr:hover td{background:#f8fafc}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.p-green{background:#dcfce7;color:#15803d}
+.p-blue{background:#dbeafe;color:#1d4ed8}
+.p-amber{background:#fef9c3;color:#92400e}
+.p-red{background:#fee2e2;color:#b91c1c}
+.p-grey{background:#f1f5f9;color:#475569}
+
+/* Risk items */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.risk-item{padding:9px 11px;border-radius:7px;border-left:3px solid}
+.r-high{background:#fff1f2;border-color:#ef4444}
+.r-med{background:#fffbeb;border-color:#f59e0b}
+.r-low{background:#f0fdf4;border-color:#22c55e}
+.r-title{font-size:11px;font-weight:700;margin-bottom:3px}
+.r-meta{font-size:10px;color:#64748b;line-height:1.4}
+
+/* Decision panel */
+.dec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.dec-card{border-radius:9px;padding:16px;border:2px solid}
+.dec-continue{border-color:#16a34a;background:#f0fdf4}
+.dec-pivot{border-color:#d97706;background:#fffbeb}
+.dec-stop{border-color:#dc2626;background:#fff1f2}
+.dec-inactive{opacity:.32}
+.dec-label{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dec-c{color:#15803d}.dec-p{color:#b45309}.dec-s{color:#b91c1c}
+.dec-body{font-size:11px;color:#374151;line-height:1.6}
+.dec-body strong{color:#1f2328}
+.dec-verdict{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:4px;margin-top:8px;letter-spacing:.04em}
+.dv-active{background:#16a34a;color:#fff}
+.dv-inactive{background:#e2e8f0;color:#64748b}
+
+/* Executive summary cards */
+.exec-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:4px}
+.exec-card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px}
+
+/* SVG inline */
+svg text{font-family:-apple-system,"Segoe UI",system-ui,sans-serif}
+
+/* Three Q bar */
+.qbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.qcard{background:#1e2330;border-radius:8px;padding:12px 16px;color:#fff}
+.qnum{font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.qtext{font-size:12px;font-weight:700;margin-bottom:3px}
+.qans{font-size:11px;color:#94a3b8;line-height:1.4}
+
+.footer{text-align:center;font-size:11px;color:#94a3b8;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0}
+</style>
+</head>
+<body>
+<div class="page">
+
+
+<div class="sample-banner">⚠ ALL FIGURES ARE FICTIONAL SAMPLE DATA — For demonstration purposes only. No real company, product, or confidential information is represented.</div>
+
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="sub">Digital Content Transformation Programme · MVP Experiment</div>
+    <h1>Executive Dashboard — Week 3 of 4</h1>
+    <div class="sub" style="margin-top:4px">Gate Review: M6 · Report date: Illustrative · Owner: Product Manager &amp; Project Manager</div>
+  </div>
+  <div class="hdr-right">
+    <div>
+      <div class="badge badge-blue" style="margin-bottom:6px;display:block;text-align:center">WEEK 3 / 4</div>
+      <div class="badge badge-green" style="display:block;text-align:center">ON TRACK</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="qbar">
+  <div class="qcard"><div class="qnum">Q1 — Where are we?</div><div class="qtext">Week 3 of 4. Experiment live.</div><div class="qans">All milestones to M3 complete. Measurement in progress. Gate review in approx. 1 week.</div></div>
+  <div class="qcard"><div class="qnum">Q2 — What is happening?</div><div class="qtext">Strong positive signals.</div><div class="qans">Digital-native format outperforming. Return rate above threshold. 2 hypotheses validated. 3 in progress.</div></div>
+  <div class="qcard"><div class="qnum">Q3 — What decision is needed?</div><div class="qtext">Gate M6 — Continue / Pivot / Stop.</div><div class="qans">Steering Group decision required at M6. Current evidence trending toward Continue. Final data outstanding.</div></div>
+</div>
+
+
+<div class="sec-title">① Executive Summary</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+  
+  <div class="card">
+    <div class="card-ttl">Overall Project Status</div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Overall Project</span><span class="srow-note">On Track</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Scope</span><span class="srow-note">Stable — no changes</span></div>
+    <div class="srow"><span class="rag a"></span><span class="srow-label">Schedule</span><span class="srow-note">1 deliverable at risk</span></div>
+    <div class="srow"><span class="rag a"></span><span class="srow-label">Risks</span><span class="srow-note">2 active · 0 critical</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Dependencies</span><span class="srow-note">All resolved</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Product Learning</span><span class="srow-note">Data flowing · on track</span></div>
+  </div>
+  
+  <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="card-ttl" style="text-align:center">Overall Progress</div>
+    <svg width="80" height="80">
+      <circle cx="40" cy="40" r="30" fill="none" stroke="#e2e8f0" stroke-width="10"></circle>
+      <circle cx="40" cy="40" r="30" fill="none" stroke="#3b82f6" stroke-width="10" stroke-linecap="round" transform="rotate(-90 40 40)"></circle>
+      <text x="40" y="44" text-anchor="middle" font-size="15" font-weight="800" fill="#1f2328">70%</text>
+    </svg>
+    <div style="font-size:10px;color:#64748b;margin-top:4px;text-align:center">Phases complete</div>
+  </div>
+  
+  <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div class="card-ttl">Current Gate</div>
+    <div style="font-size:13px;font-weight:800;color:#2563eb;margin-bottom:4px">M6 — Gate Review</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:8px">~1 week remaining</div>
+    <div style="font-size:10px;background:#dbeafe;color:#1e40af;font-weight:700;padding:4px 10px;border-radius:5px">PENDING FINAL DATA</div>
+  </div>
+  
+  <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div class="card-ttl">Current Recommendation</div>
+    <div style="font-size:13px;font-weight:800;color:#15803d;margin-bottom:4px">▶ CONTINUE</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:8px">Pending 14-day return data + 4 interviews</div>
+    <div style="font-size:10px;background:#dcfce7;color:#15803d;font-weight:700;padding:4px 10px;border-radius:5px">TRENDING POSITIVE</div>
+  </div>
+</div>
+
+
+<div class="sec-title">② Project Delivery</div>
+
+<div class="g2" style="margin-bottom:10px">
+  
+  <div class="card">
+    <div class="card-ttl">Milestone Timeline</div>
+    <div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-done"></div><div class="ms-line"></div></div>
+        <div class="ms-body"><div class="ms-title">M1 — Discovery Complete<span class="tag tag-done">Done</span></div><div class="ms-sub">User research &amp; rights audit complete. Target user hypothesis confirmed.</div></div>
+      </div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-done"></div><div class="ms-line"></div></div>
+        <div class="ms-body"><div class="ms-title">M2 — Experiment Ready<span class="tag tag-done">Done</span></div><div class="ms-sub">Instrumentation validated. Cohort recruited (102 participants). Criteria agreed.</div></div>
+      </div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-done"></div><div class="ms-line"></div></div>
+        <div class="ms-body"><div class="ms-title">M3 — Experiment Live<span class="tag tag-done">Done</span></div><div class="ms-sub">Activation confirmed. Behavioral data flowing. No critical technical issues.</div></div>
+      </div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-active"></div><div class="ms-line"></div></div>
+        <div class="ms-body"><div class="ms-title">M4 — Measurement Complete<span class="tag tag-active">In Progress</span></div><div class="ms-sub">Interviews 6/10 complete. 14-day return window still open. Data collection live.</div></div>
+      </div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-pending"></div><div class="ms-line"></div></div>
+        <div class="ms-body"><div class="ms-title">M5 — Learning Report<span class="tag tag-pending">Pending M4</span></div><div class="ms-sub">Analysis and synthesis. Depends on M4 completion.</div></div>
+      </div>
+      <div class="ms-row">
+        <div class="ms-spine"><div class="ms-dot ms-pending"></div></div>
+        <div class="ms-body"><div class="ms-title">M6 — Executive Gate<span class="tag tag-risk">~1 Week</span></div><div class="ms-sub">Continue / Pivot / Stop decision by Steering Group.</div></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-ttl">Deliverables Progress</div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D1 Rights Audit Report</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D2 User Research Report</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D3 Content Set Prepared</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D4 Experiment Design Doc</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D5 Instrumentation Live</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D6 Cohort Recruited &amp; Consented</span><span style="color:#16a34a;font-weight:700">100%</span></div><div class="pb"><div class="pb-fill pb-green" style="width:100%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D7 Qualitative Interviews (6/10)</span><span style="color:#d97706;font-weight:700">60%</span></div><div class="pb"><div class="pb-fill pb-amber" style="width:60%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D8 Behavioral Dataset</span><span style="color:#2563eb;font-weight:700">75%</span></div><div class="pb"><div class="pb-fill pb-blue" style="width:75%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D9 MVP Learning Report</span><span style="color:#64748b;font-weight:700">15%</span></div><div class="pb"><div class="pb-fill pb-blue" style="width:15%"></div></div></div>
+    <div class="pb-wrap"><div class="pb-labels"><span>D10 Gate Presentation</span><span style="color:#64748b;font-weight:700">0%</span></div><div class="pb"><div class="pb-fill pb-blue" style="width:0%"></div></div></div>
+    
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9">
+      <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Actual vs Expected Delivery</div>
+      <div class="pb-wrap">
+        <div class="pb-labels"><span style="color:#3b82f6;font-weight:600">● Actual (70%)</span><span style="color:#d97706;font-weight:600">Expected (72%)</span></div>
+        <div class="pb" style="height:14px;position:relative">
+          <div class="pb-fill pb-blue" style="width:70%;height:100%"></div>
+          <div style="position:absolute;top:0;left:72%;width:2px;height:100%;background:#d97706"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px">2pp behind plan — interviews at risk. No impact on gate date yet.</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="g2">
+  <div class="card">
+    <div class="card-ttl">Risk Register</div>
+    <div class="risk-grid">
+      <div class="risk-item r-med"><div class="r-title">R1 — Interview completion</div><div class="r-meta">Prob: Medium · Impact: Medium<br />4 interviews outstanding. 2 rescheduled; 2 new invites sent. Owner: User Researcher.</div></div>
+      <div class="risk-item r-med"><div class="r-title">R4 — Gate scheduling</div><div class="r-meta">Prob: Low · Impact: High<br />Steering group availability unconfirmed. PM to confirm by EoW. Owner: Project Manager.</div></div>
+      <div class="risk-item r-low"><div class="r-title">R3 — Instrumentation</div><div class="r-meta">Prob: Low · Impact: High<br />Edge-case event gap patched Day 2. Pre-launch validation passed. Resolved.</div></div>
+      <div class="risk-item r-low"><div class="r-title">R5 — Cohort attrition</div><div class="r-meta">Prob: Low · Impact: Low<br />102/110 active. Attrition within expected range. No action required.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-ttl">Dependency Status</div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Rights audit → Content prep</span><span class="pill p-green">Resolved</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">User research → Experiment design</span><span class="pill p-green">Resolved</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Instrumentation → Launch</span><span class="pill p-green">Resolved</span></div>
+    <div class="srow"><span class="rag g"></span><span class="srow-label">Cohort recruited → Launch</span><span class="pill p-green">Resolved</span></div>
+    <div class="srow"><span class="rag a"></span><span class="srow-label">M4 complete → Learning Report</span><span class="pill p-amber">In Progress</span></div>
+    <div class="srow"><span class="rag a"></span><span class="srow-label">M5 complete → Executive Gate</span><span class="pill p-amber">Pending M5</span></div>
+    <div class="srow"><span class="rag a"></span><span class="srow-label">Steering group confirmed → Gate date</span><span class="pill p-amber">At Risk</span></div>
+    <div style="margin-top:10px;padding:8px 10px;background:#fffbeb;border-radius:6px;border:1px solid #fde68a;font-size:11px;color:#92400e">
+      <strong>Action required:</strong> Project Manager to confirm Steering Group gate date by end of week.
+    </div>
+  </div>
+</div>
+
+
+<div class="sec-title">③ Product Performance</div>
+
+
+<div class="g4" style="margin-bottom:10px">
+  <div class="kpi-card"><div class="kpi-label">Users in Experiment</div><div class="kpi-val kv-blue">102</div><div class="kpi-sub sub-green">✓ Target: 100</div></div>
+  <div class="kpi-card"><div class="kpi-label">Activation Rate</div><div class="kpi-val kv-green">91%</div><div class="kpi-sub sub-green">↑ Target: ≥80%</div></div>
+  <div class="kpi-card"><div class="kpi-label">Avg Items / User</div><div class="kpi-val kv-purple">1.8</div><div class="kpi-sub sub-green">↑ Target: ≥1.5</div></div>
+  <div class="kpi-card"><div class="kpi-label">7-Day Return Rate</div><div class="kpi-val kv-green">31%</div><div class="kpi-sub sub-green">↑ Target: ≥20%</div></div>
+</div>
+
+<div class="g4" style="margin-bottom:10px">
+  <div class="kpi-card"><div class="kpi-label">Completion — Digital-Native</div><div class="kpi-val kv-green">48%</div><div class="kpi-sub sub-green">↑ Target: ≥40%</div></div>
+  <div class="kpi-card"><div class="kpi-label">Completion — Adapted Trad.</div><div class="kpi-val kv-red">21%</div><div class="kpi-sub" style="color:#1f2328">Confirms H1 + H2</div></div>
+  <div class="kpi-card"><div class="kpi-label">Feedback Response Rate</div><div class="kpi-val kv-blue">38%</div><div class="kpi-sub sub-green">↑ Target: ≥30%</div></div>
+  <div class="kpi-card"><div class="kpi-label">Qualitative Relevance</div><div class="kpi-val kv-green">72%</div><div class="kpi-sub sub-green">↑ Target: ≥70%</div></div>
+</div>
+
+<div class="g2" style="margin-bottom:10px">
+  
+  <div class="card">
+    <div class="card-ttl">Product Funnel — User Journey</div>
+    <div style="padding:4px 0">
+      <div class="funnel-row"><span class="fl">Invited to experiment</span><div class="fb-wrap"><div class="fb" style="background:#3b82f6;width:100%">110 users</div></div><span class="fn kv-blue">110</span></div>
+      <div class="funnel-row"><span class="fl">Activated (accessed)</span><div class="fb-wrap"><div class="fb" style="background:#3b82f6;width:92%">93 · 85%</div></div><span class="fn kv-blue">93</span></div>
+      <div class="funnel-row"><span class="fl">Consumed ≥ 1 item</span><div class="fb-wrap"><div class="fb" style="background:#6366f1;width:82%">85 · 77%</div></div><span class="fn kv-purple">85</span></div>
+      <div class="funnel-row"><span class="fl">Completed ≥ 1 item</span><div class="fb-wrap"><div class="fb" style="background:#6366f1;width:64%">65 · 59%</div></div><span class="fn kv-purple">65</span></div>
+      <div class="funnel-row"><span class="fl">Consumed ≥ 2 items</span><div class="fb-wrap"><div class="fb" style="background:#22c55e;width:54%">55 · 50%</div></div><span class="fn kv-green">55</span></div>
+      <div class="funnel-row"><span class="fl">Returned (7-day)</span><div class="fb-wrap"><div class="fb" style="background:#22c55e;width:30%">31 · 28%</div></div><span class="fn kv-green">31</span></div>
+      <div class="funnel-row"><span class="fl">Interview completed</span><div class="fb-wrap"><div class="fb" style="background:#f59e0b;width:18%">6 of 10</div></div><span class="fn kv-amber">6</span></div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-ttl">Completion Rate by Format Variant</div>
+    <div style="font-size:10px;color:#64748b;margin-bottom:10px">Key test of H1 + H2 — format effect on completion</div>
+
+    <div class="pb-wrap">
+      <div class="pb-labels"><span style="font-weight:700">Digital-Native Short-Form</span><span style="color:#16a34a;font-weight:800">48%</span></div>
+      <div class="pb" style="height:18px"><div class="pb-fill pb-green" style="width:48%"></div></div>
+    </div>
+    <div class="pb-wrap" style="margin-top:8px">
+      <div class="pb-labels"><span style="font-weight:700">Digital-Native Long-Form</span><span style="color:#3b82f6;font-weight:800">34%</span></div>
+      <div class="pb" style="height:18px"><div class="pb-fill pb-blue" style="width:34%"></div></div>
+    </div>
+    <div class="pb-wrap" style="margin-top:8px">
+      <div class="pb-labels"><span style="font-weight:700">Adapted Traditional Format</span><span style="color:#ef4444;font-weight:800">21%</span></div>
+      <div class="pb" style="height:18px"><div class="pb-fill pb-red" style="width:21%"></div></div>
+    </div>
+    <div style="margin-top:8px;padding:3px 0;border-top:1px dashed #e2e8f0">
+      <div class="pb-labels" style="margin-top:6px"><span style="color:#64748b">Threshold (≥40% to pass)</span><span style="color:#d97706;font-weight:700">40%</span></div>
+      <div class="pb" style="height:6px"><div style="width:40%;height:100%;background:repeating-linear-gradient(90deg,#d97706 0,#d97706 4px,transparent 4px,transparent 8px);border-radius:3px"></div></div>
+    </div>
+    <div style="margin-top:10px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;color:#15803d">
+      <strong>Signal:</strong> 27pp gap between digital-native short-form and adapted traditional. Exceeds 15pp threshold. <strong>H1 + H2 confirmed.</strong>
+    </div>
+
+    
+    <div style="margin-top:12px;border-top:1px solid #f1f5f9;padding-top:10px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">14-Day Return Rate (window still open)</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <svg width="70" height="70">
+          <circle cx="35" cy="35" r="26" fill="none" stroke="#e2e8f0" stroke-width="9"></circle>
+          <circle cx="35" cy="35" r="26" fill="none" stroke="#22c55e" stroke-width="9" stroke-linecap="round" transform="rotate(-90 35 35)"></circle>
+          <text x="35" y="38" text-anchor="middle" font-size="13" font-weight="800" fill="#15803d">31%</text>
+        </svg>
+        <div style="font-size:11px;color:#374151;line-height:1.5">
+          <div><strong>7-day:</strong> 31% <span style="color:#16a34a;font-weight:700">↑ above 20% target</span></div>
+          <div style="color:#64748b;font-size:10px;margin-top:2px">14-day window still open — final figure at M4</div>
+          <div style="color:#64748b;font-size:10px">Target: ≥25% at 14 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card" style="margin-bottom:10px">
+  <div class="card-ttl">Content Performance by Item — Completion Rate per Piece</div>
+  <div class="cp-row"><span class="cp-name">Item A — Topic 1</span><span class="cp-fmt">Digital-Native SF</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-green" style="width:56%"></div></div></div><span class="cp-pct kv-green">56%</span></div>
+  <div class="cp-row"><span class="cp-name">Item B — Topic 2</span><span class="cp-fmt">Digital-Native SF</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-green" style="width:51%"></div></div></div><span class="cp-pct kv-green">51%</span></div>
+  <div class="cp-row"><span class="cp-name">Item C — Topic 1</span><span class="cp-fmt">Digital-Native LF</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-blue" style="width:37%"></div></div></div><span class="cp-pct kv-blue">37%</span></div>
+  <div class="cp-row"><span class="cp-name">Item D — Topic 3</span><span class="cp-fmt">Digital-Native LF</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-blue" style="width:31%"></div></div></div><span class="cp-pct kv-blue">31%</span></div>
+  <div class="cp-row"><span class="cp-name">Item E — Topic 2</span><span class="cp-fmt">Adapted Traditional</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-amber" style="width:24%"></div></div></div><span class="cp-pct kv-amber">24%</span></div>
+  <div class="cp-row"><span class="cp-name">Item F — Topic 3</span><span class="cp-fmt">Adapted Traditional</span><div class="cp-bar"><div class="pb"><div class="pb-fill pb-red" style="width:17%"></div></div></div><span class="cp-pct kv-red">17%</span></div>
+  <div style="margin-top:8px;padding:7px 10px;background:#f8fafc;border-radius:5px;font-size:10px;color:#64748b;display:flex;gap:16px">
+    <span><span style="display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:2px;margin-right:4px"></span>Digital-Native Short-Form</span>
+    <span><span style="display:inline-block;width:8px;height:8px;background:#3b82f6;border-radius:2px;margin-right:4px"></span>Digital-Native Long-Form</span>
+    <span><span style="display:inline-block;width:8px;height:8px;background:#f59e0b;border-radius:2px;margin-right:4px"></span>Adapted Traditional</span>
+    <span style="margin-left:auto"><strong style="color:#d97706">— — —</strong> 40% threshold</span>
+  </div>
+</div>
+
+
+<div class="card" style="margin-bottom:10px">
+  <div class="card-ttl">Hypothesis Validation Status — Week 3</div>
+  <table class="htbl">
+    <thead>
+      <tr><th>ID</th><th>Hypothesis</th><th>Status</th><th>Evidence Summary</th><th>Gate Impact</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>H1</strong></td>
+        <td>Traditional adapted formats underperform digital-native formats with digital audiences</td>
+        <td><span class="pill p-green">✓ Validated</span></td>
+        <td>27pp gap across all items. Consistent across all topic types.</td>
+        <td><span class="pill p-green">Supports Continue</span></td>
+      </tr>
+      <tr>
+        <td><strong>H2</strong></td>
+        <td>At least one format achieves ≥40% completion rate</td>
+        <td><span class="pill p-green">✓ Validated</span></td>
+        <td>Digital-native short-form: 48%. Items A and B both above threshold.</td>
+        <td><span class="pill p-green">Supports Continue</span></td>
+      </tr>
+      <tr>
+        <td><strong>H3</strong></td>
+        <td>Users who complete one item return within 14 days</td>
+        <td><span class="pill p-blue">◑ In Progress</span></td>
+        <td>7-day return 31% (above 20% threshold). 14-day window still open.</td>
+        <td><span class="pill p-amber">Pending final data</span></td>
+      </tr>
+      <tr>
+        <td><strong>H4</strong></td>
+        <td>Users can articulate an unmet content need this org could address</td>
+        <td><span class="pill p-blue">◑ In Progress</span></td>
+        <td>6/10 interviews complete. 72% relevance signal so far (target ≥70%).</td>
+        <td><span class="pill p-amber">Pending 4 interviews</span></td>
+      </tr>
+      <tr>
+        <td><strong>H5</strong></td>
+        <td>Rights-cleared content exists in sufficient volume for experiment</td>
+        <td><span class="pill p-green">✓ Validated</span></td>
+        <td>Rights audit: 12 items cleared. 5 used in MVP. 7 available for Phase 2.</td>
+        <td><span class="pill p-green">Supports Continue</span></td>
+      </tr>
+      <tr>
+        <td><strong>H6</strong></td>
+        <td>Organisation's brand is not a barrier to digital audience engagement</td>
+        <td><span class="pill p-blue">◑ In Progress</span></td>
+        <td>Activation 91% — no friction at access. Brand perception analysis pending from interviews.</td>
+        <td><span class="pill p-amber">Pending interviews</span></td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>Primary</strong></td>
+        <td>Content-audience fit exists, justifying further product and technology investment</td>
+        <td><span class="pill p-amber">⏳ Pending Gate</span></td>
+        <td>Behavioral signals positive across 4 of 6 hypotheses. Final data outstanding.</td>
+        <td><span class="pill p-amber">Decision at M6</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:8px;padding:6px 12px;background:#f8fafc;border-radius:5px;font-size:10px;color:#64748b;display:flex;gap:16px;align-items:center">
+    <span><span class="pill p-green">✓ Validated</span> 2 of 6</span>
+    <span><span class="pill p-blue">◑ In Progress</span> 3 of 6</span>
+    <span><span class="pill p-amber">⏳ Pending</span> 1 of 6</span>
+    <span><span class="pill p-red">✗ Invalidated</span> 0 of 6</span>
+  </div>
+</div>
+
+
+<div class="sec-title">④ Decision Panel — Continue / Pivot / Stop</div>
+
+<div class="dec-grid" style="margin-bottom:10px">
+  
+  <div class="dec-card dec-continue">
+    <div class="dec-label dec-c">
+      <svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#22c55e"></circle><polygon points="6,4 13,8 6,12" fill="#fff"></polygon></svg>
+      CONTINUE
+    </div>
+    <div class="dec-body">
+      <strong>Evidence driving this:</strong><br />
+      · H1 + H2 validated — format signal confirmed<br />
+      · Completion 48% (digital-native SF) ↑ target<br />
+      · 7-day return 31% ↑ above 20% threshold<br />
+      · Activation 91% — no access friction<br />
+      · Qualitative relevance 72% ↑ at target<br />
+      · H5 confirmed — rights pipeline viable<br /><br />
+      <strong>Still required before gate:</strong><br />
+      · 14-day return window to close<br />
+      · 4 remaining interviews completed<br />
+      · Full dataset analysis
+    </div>
+    <div class="dec-verdict dv-active">LIKELY — PENDING FINAL DATA</div>
+  </div>
+
+  
+  <div class="dec-card dec-pivot dec-inactive">
+    <div class="dec-label dec-p">
+      <svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#f59e0b"></circle><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">↗</text></svg>
+      PIVOT
+    </div>
+    <div class="dec-body">
+      <strong>Would require:</strong><br />
+      · Return rate drops below 10% at 14 days<br />
+      · Qualitative relevance falls below 30%<br />
+      · Strong signal only in one content sub-topic<br />
+      · Format differential &lt;15pp (inconclusive)<br /><br />
+      <strong>Current position:</strong><br />
+      · Not indicated by any current metric<br />
+      · Segment refinement possible if final interviews diverge significantly
+    </div>
+    <div class="dec-verdict dv-inactive">NOT INDICATED</div>
+  </div>
+
+  
+  <div class="dec-card dec-stop dec-inactive">
+    <div class="dec-label dec-s">
+      <svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#ef4444"></circle><rect x="5" y="5" width="6" height="6" fill="#fff" rx="1"></rect></svg>
+      STOP
+    </div>
+    <div class="dec-body">
+      <strong>Would require:</strong><br />
+      · All completion rates below 15% failure threshold<br />
+      · 14-day return below 10%<br />
+      · Qualitative relevance below 30%<br />
+      · No directional signal in any variant or topic<br /><br />
+      <strong>Current position:</strong><br />
+      · Not supported by any current metric<br />
+      · All behavioral indicators above failure thresholds<br />
+      · No evidence of this outcome
+    </div>
+    <div class="dec-verdict dv-inactive">NOT SUPPORTED</div>
+  </div>
+</div>
+
+
+<div style="background:#1e2330;border-radius:9px;padding:16px 20px;color:#fff;margin-bottom:6px">
+  <div style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Gate M6 — Current Recommendation</div>
+  <div style="font-size:13px;font-weight:700;color:#86efac;margin-bottom:6px">▶ Trending toward CONTINUE — pending 14-day return data and 4 qualitative interviews</div>
+  <div style="font-size:11px;color:#94a3b8;line-height:1.6">Current behavioral evidence across H1, H2, H5 is above success thresholds. Activation and qualitative signals are positive. Two hypotheses (H3, H4) remain open pending final data. No evidence supports Pivot or Stop. Steering Group gate should proceed as scheduled. Final recommendation will be confirmed in the MVP Learning Report (D9).</div>
+  <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+    <div style="background:#16a34a;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">2 Hypotheses Validated</div>
+    <div style="background:#2563eb;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">3 Hypotheses In Progress</div>
+    <div style="background:#374151;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">0 Hypotheses Invalidated</div>
+    <div style="background:#d97706;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">Action: Confirm Gate Date</div>
+  </div>
+</div>
+
+<div class="footer">Made with IBM Bob · All data is fictional sample data for demonstration purposes only</div>
+</div>
+</body>
+</html>
